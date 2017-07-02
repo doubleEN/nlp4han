@@ -91,9 +91,19 @@ public class SentenceSegmenterRule implements SentenceSegmenter
 
         return sentences.toArray(new String[sentences.size()]);
     }
+    
+    private static void usage()
+    {
+        System.out.println(SentenceSegmenterRule.class.getName() + " <textFile> <encoding>");
+    }
 
     public static void main(String[] args) throws IOException
     {
+        if(args.length < 1)
+        {
+            usage();
+            return;
+        }
         String file = args[0];
         String encoding = args[1];
 
