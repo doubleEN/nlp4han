@@ -1,5 +1,6 @@
 package com.kidden.tc.nlp4han.segment;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +66,12 @@ public class WordSegmenterME implements WordSegmenter
      */
     public WordSegmenterME(WordSegModel model, WordSegContextGenerator contextGenerator)
     {
+        init(model, contextGenerator);
 
+    }
+    
+    private void init(WordSegModel model, WordSegContextGenerator contextGenerator)
+    {
         int beamSize = WordSegmenterME.DEFAULT_BEAM_SIZE;
 
         String beamSizeString = model.getManifestProperty(BeamSearch.BEAM_SIZE_PARAMETER);
@@ -90,7 +96,30 @@ public class WordSegmenterME implements WordSegmenter
             this.model = new opennlp.tools.ml.BeamSearch<String>(beamSize,
                     model.getWordsegModel(), 0);
         }
-
+    }
+    
+    /**
+     * 由分词模型文件构建分词器
+     * 
+     * @param modelFile 分词模型文件
+     */
+    public WordSegmenterME(File modelFile) throws IOException
+    {
+        this(modelFile, new DefaultWordSegContextGenerator());
+    }
+    
+    /**
+     * 由分词模型文件构建分词器
+     * 
+     * @param modelFile 分词模型文件
+     * @param contextGenerator 分词上下文产生器
+     */
+    public WordSegmenterME(File modelFile, WordSegContextGenerator contextGenerator) throws IOException
+    {
+        WordSegModel model = new WordSegModel(modelFile);
+        
+        init(model, contextGenerator);
+        
     }
 
     /**
