@@ -75,6 +75,8 @@ public class WordSegMETrainerTool
         if (args.length < 1)
         {
             usage();
+            
+            return;
         }
 
         int cutoff = 3;

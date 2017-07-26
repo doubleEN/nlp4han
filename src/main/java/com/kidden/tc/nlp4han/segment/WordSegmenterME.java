@@ -183,7 +183,7 @@ public class WordSegmenterME implements WordSegmenter
         return chars;
     }
 
-    private String[] tag(String[] sentence, Object[] additionaContext)
+    public String[] tag(String[] sentence, Object[] additionaContext)
     {
         bestSequence = model.bestSequence(sentence, additionaContext, contextGen, sequenceValidator);
         List<String> t = bestSequence.getOutcomes();
