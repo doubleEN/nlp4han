@@ -1,8 +1,10 @@
 package com.lc.nlp4han.pos;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +22,20 @@ public class POSModelRef
     
     private String mostFreqTag = "";
     
+    /**
+     * 从外部模型文件创建模型
+     */
     public POSModelRef(DataInput in) throws IOException
     {
         read(in);
+    }
+    
+    /**
+     * 从外部模型文件创建模型
+     */
+    public POSModelRef(InputStream in) throws IOException
+    {
+        read(new DataInputStream(in));
     }
     
     /**
