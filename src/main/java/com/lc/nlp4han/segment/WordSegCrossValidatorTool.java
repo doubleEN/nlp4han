@@ -79,8 +79,6 @@ public class WordSegCrossValidatorTool
             System.out.println(measure);
 
             run++;
-            
-            System.out.println(measure);
         }
 
 //        System.out.println(measure);
