@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -287,6 +288,28 @@ public class WordSegmenterME implements WordSegmenter
         }
 
         return words.toArray(new String[words.size()]);
+    }
+    
+    /**
+     * 从分词样本流中构建词典
+     * 
+     * @param samples 分词样本流
+     * @return 样本的词典
+     * @throws IOException
+     */
+    public static HashSet<String> buildDict(ObjectStream<WordSegSample> samples) throws IOException
+    {
+        HashSet<String> dict = new HashSet<String>();
+        WordSegSample sample = null;
+        while((sample = samples.read()) != null)
+        {
+            String[] words = sample.toWords();
+            
+            for(String word : words)
+                dict.add(word);
+        }
+        
+        return dict;
     }
 
     public static WordSegModel train(String languageCode,
