@@ -2,6 +2,7 @@ package com.lc.nlp4han.segment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
@@ -22,8 +23,6 @@ public class WordSegCrossValidatorTool
     private final TrainingParameters params;
 
     private WordSegEvaluationMonitor[] listeners;
-
-    private WordSegMeasure measure = new WordSegMeasure();
 
     /**
      * 构建交叉验证器
@@ -63,8 +62,16 @@ public class WordSegCrossValidatorTool
         {
             System.out.println("Run " + run + "...");
             CrossValidationPartitioner.TrainingSampleStream<WordSegSample> trainingSampleStream = partitioner.next();
+            
+            System.out.println("从样本构建词典...");
+            HashSet<String> dict = WordSegmenterME.buildDict(trainingSampleStream);
+            
+            System.out.println("训练分词模型...");
+            trainingSampleStream.reset();
             WordSegModel model = WordSegmenterME.train(languageCode, trainingSampleStream, params, contextGenerator);
 
+            System.out.println("评价分词模型...");
+            WordSegMeasure measure = new WordSegMeasure(dict);
             WordSegEvalTool evaluator = new WordSegEvalTool(new WordSegmenterME(model, contextGenerator), listeners);
             evaluator.setMeasure(measure);
             evaluator.evaluate(trainingSampleStream.getTestSampleStream());
@@ -72,9 +79,11 @@ public class WordSegCrossValidatorTool
             System.out.println(measure);
 
             run++;
+            
+            System.out.println(measure);
         }
 
-        System.out.println(measure);
+//        System.out.println(measure);
     }
 
     private static void usage()
